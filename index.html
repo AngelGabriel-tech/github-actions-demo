@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Azure App Service Frontend Demo</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Azure Pipelines demo</p>
+          <h1 id="page-title">Frontend deployment to Azure App Service</h1>
+          <p class="lead">
+            A small static frontend project configured for continuous deployment
+            from Azure Pipelines.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="https://learn.microsoft.com/azure/app-service/" target="_blank" rel="noreferrer">
+              App Service docs
+            </a>
+            <a class="button secondary" href="https://learn.microsoft.com/azure/devops/pipelines/" target="_blank" rel="noreferrer">
+              Pipeline docs
+            </a>
+          </div>
+        </div>
+        <div class="status-panel" aria-label="Deployment status summary">
+          <div class="status-header">
+            <span class="pulse" aria-hidden="true"></span>
+            <span>Pipeline ready</span>
+          </div>
+          <dl>
+            <div>
+              <dt>Source</dt>
+              <dd>Git repository</dd>
+            </div>
+            <div>
+              <dt>Build</dt>
+              <dd>Archive static files</dd>
+            </div>
+            <div>
+              <dt>Deploy</dt>
+              <dd>Azure App Service</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="cards" aria-label="Deployment steps">
+        <article>
+          <span class="step">01</span>
+          <h2>Commit</h2>
+          <p>Push this project to your Azure Repos or GitHub repository.</p>
+        </article>
+        <article>
+          <span class="step">02</span>
+          <h2>Build</h2>
+          <p>Azure Pipelines publishes the static frontend as a zip artifact.</p>
+        </article>
+        <article>
+          <span class="step">03</span>
+          <h2>Release</h2>
+          <p>The pipeline deploys the artifact to your Azure App Service.</p>
+        </article>
+      </section>
+    </main>
+
+    <script src="src/main.js"></script>
+  </body>
+</html>

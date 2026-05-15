@@ -1,0 +1,69 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  # Replace with the name of your Azure Resource Manager service connection.
+  azureSubscription: 'YOUR-AZURE-SERVICE-CONNECTION'
+  # Replace with your Azure App Service name.
+  appName: 'YOUR-APP-SERVICE-NAME'
+  packagePath: '$(Build.ArtifactStagingDirectory)/frontend.zip'
+
+stages:
+  - stage: Build
+    displayName: Build frontend package
+    jobs:
+      - job: Package
+        displayName: Package static frontend
+        steps:
+          - checkout: self
+
+          - task: CopyFiles@2
+            displayName: Copy frontend files
+            inputs:
+              SourceFolder: '$(Build.SourcesDirectory)'
+              Contents: |
+                index.html
+                web.config
+                src/**
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/site'
+
+          - task: ArchiveFiles@2
+            displayName: Create deployment zip
+            inputs:
+              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/site'
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: '$(packagePath)'
+              replaceExistingArchive: true
+
+          - publish: '$(packagePath)'
+            displayName: Publish pipeline artifact
+            artifact: frontend
+
+  - stage: Deploy
+    displayName: Deploy to Azure App Service
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment: DeployFrontend
+        displayName: Deploy frontend package
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: frontend
+
+                - task: AzureWebApp@1
+                  displayName: Deploy zip to App Service
+                  inputs:
+                    azureSubscription: '$(azureSubscription)'
+                    appType: webApp
+                    appName: '$(appName)'
+                    package: '$(Pipeline.Workspace)/frontend/frontend.zip'
